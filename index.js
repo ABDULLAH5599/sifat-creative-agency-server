@@ -8,7 +8,8 @@ const fileUpload = require('express-fileupload');
 
 const port = 4000
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.rqcp4.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+//pass OfW1ULUDO4NN4w8d
+const uri = `mongodb+srv://CreativeAgency:OfW1ULUDO4NN4w8d@cluster0.rqcp4.mongodb.net/SifatCreativeAgency?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const app = express()
@@ -18,26 +19,12 @@ app.use(express.static('clients'));
 app.use(fileUpload());
 
 client.connect(err => {
-    const orderCollection = client.db("creativeAgency").collection("orders");
-    const reviewCollection = client.db("creativeAgency").collection("reviews");
-    const serviceCollection = client.db("creativeAgency").collection("services");
-    const adminCollection = client.db("creativeAgency").collection("admins");
-    
-    app.post('/addOrder', (req, res) => {
-        const order = req.body;
-        console.log(order)
-        orderCollection.insertOne(order)
-        .then(result => {
-            res.send(result.insertedCount > 0)
-        })
-    });
 
-    app.get('/orders', (req, res) =>{
-        orderCollection.find({})
-        .toArray((err, documents) => {
-          res.send(documents)
-        })
-    })
+    const reviewCollection = client.db("SifatCreativeAgency").collection("review");
+    const serviceCollection = client.db("SifatCreativeAgency").collection("Service");
+    const adminCollection = client.db("SifatCreativeAgency").collection("admins");
+    
+    
 
   //   app.post('/ordersByEmail', (req, res) => {
   //     const email = req.body.email;
@@ -106,33 +93,15 @@ app.post('/addService', (req, res) => {
       })
 });
 
-app.post('/makeAdmin', (req, res) => {
-  const admin = req.body;
-  console.log(admin)
-  adminCollection.insertOne(admin)
-  .then(result => {
-      res.send(result.insertedCount > 0)
-  })
-});
 
-app.get('/admins', (req, res) => {
-  adminCollection.find({})
-      .toArray((err, documents) => {
-          res.send(documents);
-      })
-});
 
-app.post('/isAdmin', (req, res) => {
-  const email = req.body.email;
-  adminCollection.find({ email: email })
-      .toArray((err, admins) => {
-          res.send(admins.length > 0);
-      })
-})
+
+
+
 
   });
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
-app.listen(process.env.PORT || port)
+app.listen(port)
